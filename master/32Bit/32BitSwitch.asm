@@ -7,7 +7,7 @@ switch_to_pm:   ; Protected mode
     or eax, 0x1
     mov cr0, eax
 
-    ; Current stage: the segmentation approach is changed. CODE_SEG is just a offset to the GDT_STARTR
+    ; Current stage: the segmentation approach is changed. CODE_SEG is just a offset to the GDT_START
     jmp CODE_SEG:init_pm    ; Far jump by using a different segment
 
 [bits 32]
@@ -16,8 +16,8 @@ init_pm:
     mov ds, ax
     mov ss, ax
     mov es, ax
-    mov fs, ax
-    mov gx, ax
+    mov fs, ax             ; Following two are OS-specific registers
+    mov gs, ax
 
     mov ebp, 0x90000        ; Update the stack registers
     mov esp, ebp
