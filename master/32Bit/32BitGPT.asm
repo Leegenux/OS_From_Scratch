@@ -21,5 +21,5 @@ gdt_descriptor:
     dw gdt_end - gdt_start - 1
     dd gdt_start ; Address should be 32 bits
 
-CODE_SEG equ gdt_code - gdt_start   ; A offset
+CODE_SEG equ gdt_code - gdt_start   ; An offset
 DATA_SEG equ gdt_data - gdt_start
