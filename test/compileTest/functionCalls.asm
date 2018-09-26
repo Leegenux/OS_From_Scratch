@@ -20,3 +20,20 @@ _callee:
     mov eax, dword ptr [ebp-0x4]
     leave
     ret
+
+_caller:
+    push   ebp
+    mov    ebp,esp
+    sub    esp,0x10
+
+    push   DWORD PTR [ebp+0x10]   ; Push last function call stack frame's params into current stack
+    push   DWORD PTR [ebp+0xc]
+    push   DWORD PTR [ebp+0x8]
+
+    call   2c <caller+0x10>
+    add    esp,0xc
+
+    mov    DWORD PTR [ebp-0x4],eax ; The local variable
+    mov    eax,DWORD PTR [ebp-0x4] ; Return the result
+    leave
+    ret
