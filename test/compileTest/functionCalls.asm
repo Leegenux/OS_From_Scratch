@@ -1,7 +1,7 @@
 _callee:
     push ebp
     mov ebp, esp
-    sub esp, 0x10   ; 16 bytes (each int takes 4)
+    sub esp, 0x10   ; 16 bytes (though each int takes 4)
 
     ; Division with result in eax
     mov eax, dword ptr [ebp+0xc] ; One int far from stack top (@param b)
