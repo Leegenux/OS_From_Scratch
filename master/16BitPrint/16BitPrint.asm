@@ -24,7 +24,7 @@ print_16_string:    ; Given that the address has been stored in bx
 ; print_16_string:
 ;     push ax
 
-print_16_hex:
+print_16_hex:   ; The hex code to be printed is stored in bx
     pusha
 
     mov ah, 0x0e
