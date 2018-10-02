@@ -21,6 +21,9 @@ print_16_string:    ; Given that the address has been stored in bx
     pop ax
     ret
 
+; print_16_string:
+;     push ax
+
 print_16_hex:
     pusha
 

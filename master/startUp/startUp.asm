@@ -8,7 +8,8 @@ switch_protected_mode:
 
 trigger_main:
 
-jmp $
+os_freeze:
+    jmp $
 
 %include "../16BitPrint/16BitPrint.asm"
 %include "../32Bit/32BitGPT.asm"
