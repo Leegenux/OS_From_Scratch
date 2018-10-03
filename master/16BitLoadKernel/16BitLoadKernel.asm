@@ -1,10 +1,11 @@
+; One requirement of the file is: [BOOT_DISK_NUMBER] should have already set.
 load_disk:      ; 5 parameters should already have been pre-configured
 ; 1. dl, ch, dh, cl are respectively "drive number", "cylindar number", "header number" and "starting sector #".
 ; 2. al will be automatically set to the amount of the sectors read.
 
     mov ah, 0x02  ; Read and load disk data function
     ; mov al, 0x0f  ; Load 15 sectors totally
-    ; mov [BOOT_DRIVE_NUMBER], dl  ;  The BIOS set the dl defaultly as the boot-drive number
+    mov [BOOT_DRIVE_NUMBER], dl  ;  The BIOS set the dl defaultly as the boot-drive number
 
     push ax ; Need value of al
     int 0x13
