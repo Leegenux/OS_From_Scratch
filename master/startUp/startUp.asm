@@ -1,8 +1,12 @@
 ; This file is the main driver of the startup process
 
 [org 0x7c00]    ; BIOS code offset
+BIOS_CODE_OFFSET equ 0x7c00
 
 mov [BOOT_DRIVE_NUMBER], dl
+
+mov bp, 0x9000  ; Set up stack
+mov sp, bp
 
 ; Load the kernel at offset 0x1000
 ; mov [KERNEL_OFFSET], 0x1000
@@ -17,7 +21,6 @@ begin_pm:       ; This label is required by 32BitSwitch
 call [KERNEL_OFFSET] ; Remember that if your KERNEL_SEGMENT is not 0x0000
                    ; Then here is supposed to be some tuning.
 jmp $
-times 2 dd 0xffffffff
 
 %include "../16BitPrint/16BitPrint.asm"
 %include "../16BitLoadKernel/16BitLoadKernel.asm"
@@ -26,3 +29,7 @@ times 2 dd 0xffffffff
 
 times 510 - ($ - $$) db 0x0
 dw 0xaa55
+
+times 0x1e00 db 0x00  ; 15 sectors
+
+; Remember this number qemu: Trying to execute code outside RAM or ROM at 0x00000000ff007d50

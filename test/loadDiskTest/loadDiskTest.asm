@@ -5,6 +5,10 @@
 mov bp, 0x9000
 mov sp, bp
 
+mov bx, bp      ; To test if org offsets the bp
+call print_16_hex
+call print_16_nl
+
 mov [BOOT_DRIVE_NUMBER], dl
 
 mov bx, 0x0900     ; Load the disk
@@ -51,6 +55,7 @@ times 256 dw 0x3456
 times 256 dw 0x4567
 times 256 dw 0xabcd
 
-; From this snippet of code, we know 2 things
+; From this snippet of code, we know 3 things
 ; 1. The block of memory that the base pointer points to stores nothing, so you can safely write dat onto it.
 ; 2. 16bit segment can serve as page.
+; 3. org offsets nothing but memory references, jumps and calls. 
