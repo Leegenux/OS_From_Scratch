@@ -4,18 +4,17 @@
 
 mov [BOOT_DRIVE_NUMBER], dl
 
-load_kernel:    ; Load kernel at 0x1000
-; Load the data
+; Load the kernel at offset 0x1000
 ; mov [KERNEL_OFFSET], 0x1000
 ; mov [KERNEL_SEGMENT], 0x0000
+; Above are defaults
 call load_kernel
+call switch_to_pm
 
-
-
-
-switch_protected_mode:
-
-trigger_main:
+[bits 32]
+begin_pm:       ; This label is required by 32BitSwitch
+call KERNEL_OFFSET ; Remember that if your KERNEL_SEGMENT is not 0x0000
+                   ; Then here is supposed to be some tuning.
 
 jmp $
 

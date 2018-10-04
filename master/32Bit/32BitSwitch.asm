@@ -1,6 +1,8 @@
+; One mandotary requirement of running code in this file is that a `begin_pm` label should be well implemented.
+; This file is more closely tied to 32BitGPT.asm than any other source file.
 [bits 16]
 switch_to_pm:   ; Protected mode
-    cli         ; 1. Disable incoming tinterrupt
+    cli         ; 1. Disable incoming interrupt
     lgdt [gdt_descriptor]   ; 2. Load the GDT descriptor
 
     mov eax, cr0            ; 3. Set the least bit(32-bit mode flag bit) to 1
@@ -8,11 +10,11 @@ switch_to_pm:   ; Protected mode
     mov cr0, eax
 
     ; Current stage: the segmentation approach is changed. CODE_SEG is just a offset to the GDT_START
-    jmp CODE_SEG:init_pm    ; 4. Far jump by using a different segment to flush the pipeline
+    jmp CODE_SEG:init_pm    ; 4. Far jump by using a different segment to flush the pipeline (The jump is workable since the code segment actually does not change, which is 0x0000 before and after.)
 
 [bits 32]
 init_pm:       
-    mov ax, DATA_SEG       ; 5. Update the segment registers
+    mov ax, DATA_SEG       ; 5. Update the segment registers since the inner mechanism of segment has already changed
     mov ds, ax
     mov ss, ax
     mov es, ax
@@ -20,6 +22,6 @@ init_pm:
     mov gs, ax
 
     mov ebp, 0x90000       ; Update the stack registers
-    mov esp, ebp
+    mov esp, eb
 
-    call BEGIN_PM
+    call begin_pm
