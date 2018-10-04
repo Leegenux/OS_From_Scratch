@@ -1,4 +1,4 @@
-[org 0x7c00]  ; BIOS default offse, it doesn't work with the machanism of the 16 bits segment
+[bits 16]
 
 ; Set up disk
 mov bp, 0x9000
@@ -6,8 +6,7 @@ mov sp, bp
 
 mov [BOOT_DRIVE_NUMBER], dl
 
-loadDisk:
-mov bx, 0x0901
+mov bx, 0x0901      ; Load the disk
 mov es, bx
 mov bx, 0x0000
 mov al, 0x05
@@ -18,7 +17,7 @@ mov cl, 0x02
 
 call load_disk
 
-mov bx, 0x0900
+mov bx, 0x0901      ; Print the read data result
 mov ds, bx
 mov bx, [512]
 call print_16_hex

@@ -1,4 +1,4 @@
-[org 0x7c00]
+[bits 16]
 ; [bits 16] is not must, cuz this function can be used both in 16-bit and 32-bit
 
 print_16_string:    ; Given that the address has been stored in bx
