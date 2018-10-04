@@ -36,15 +36,19 @@ load_kernel:
     mov bx, LOAD_KERNEL_MSG
     call print_16_string
 
+    mov al, 0x01   ; Sectors expected = 15
     mov dl, [BOOT_DRIVE_NUMBER] ; Drive number
-    mov al, 0x0f    ; Sectors expected = 15
     mov ch, 0x00    ; Cylinder #0
     mov dh, 0x00    ; Head #0
     mov cl, 0x02    ; Sector #2
     mov bx, [KERNEL_SEGMENT]
     mov es, bx
     mov bx, [KERNEL_OFFSET]
+
     call load_disk
+
+    mov bx, LOAD_KERNEL_DONE_MSG
+    call print_16_string
 
     popa
     ret
@@ -60,6 +64,7 @@ KERNEL_SEGMENT: dw 0x0000      ; Segment registers value
 LOAD_DISK_COUNT_ERROR_MSG: db "load disk count error.", 0x0a, 0x0d , 0x00
 LOAD_DISK_UNKNOWN_ERROR_MSG: db "load disk unknown error.", 0x0a, 0x0d, 0x00
 LOAD_KERNEL_MSG: db "Start to load kernel...", 0x0a, 0x0d, 0x00
+LOAD_KERNEL_DONE_MSG: db "Done loading kernel code...", 0x0a, 0x0d, 0x00
 
 
 

@@ -11,16 +11,17 @@ mov [BOOT_DRIVE_NUMBER], dl
 call load_kernel
 call switch_to_pm
 
+
 [bits 32]
 begin_pm:       ; This label is required by 32BitSwitch
-call KERNEL_OFFSET ; Remember that if your KERNEL_SEGMENT is not 0x0000
+call [KERNEL_OFFSET] ; Remember that if your KERNEL_SEGMENT is not 0x0000
                    ; Then here is supposed to be some tuning.
-
 jmp $
+times 2 dd 0xffffffff
 
 %include "../16BitPrint/16BitPrint.asm"
 %include "../16BitLoadKernel/16BitLoadKernel.asm"
-%include "../32Bit/32BitGPT.asm"
+%include "../32Bit/32BitGDT.asm"
 %include "../32Bit/32BitSwitch.asm"
 
 times 510 - ($ - $$) db 0x0

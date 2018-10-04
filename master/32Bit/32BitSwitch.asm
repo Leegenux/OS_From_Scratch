@@ -22,6 +22,6 @@ init_pm:
     mov gs, ax
 
     mov ebp, 0x90000       ; Update the stack registers
-    mov esp, eb
+    mov esp, ebp
 
     call begin_pm

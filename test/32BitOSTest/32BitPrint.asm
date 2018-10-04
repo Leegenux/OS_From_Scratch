@@ -25,11 +25,10 @@ print_32_bit:		          ; First you should set the VIDEO_MEMORY iteral
     add ecx, 1
 
     jmp print_32_loop
-    
 
     print_32_done:
-        pop ecx
-        pop ebx
-        pop ax
-        ret
+    pop ecx
+    pop ebx
+    pop ax
+    ret
 
