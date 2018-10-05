@@ -16,7 +16,7 @@
 
 [bits 32]
 begin_pm:
-    mov ecx, MSG_PROT_MODE
+    mov ebx, MSG_PROT_MODE
     call print_32_string
     jmp $
 

@@ -7,6 +7,9 @@ void main(void) {
     // "Hello world!"
     const char *helloString = "Hello world!    ";
     for (; i<16; i++) {
-        *(video_memory+i) = helloString[i];
+        // *(video_memory+2*i) = helloString[i];
+        // *(video_memory+2*i+1) = 0x0f;
+        video_memory[2*i] = helloString[i];
+        video_memory[2*i + 1] = 0x0f;
     }
 }
