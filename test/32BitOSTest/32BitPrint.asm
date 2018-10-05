@@ -5,7 +5,7 @@
 VIDEO_MEMORY equ 0xb8000      ; The Video memory in 32-bit mode is located at 0xb8000
 WHITE_ON_BLACK equ 0x0f
 
-print_32_bit:		          ; First you should set the VIDEO_MEMORY iteral
+print_32_string:		          ; First you should set the VIDEO_MEMORY iteral
     push ax
     push ebx                  ; Destination pointer (Video memory)
     push ecx                  ; Source string pointer

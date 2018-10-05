@@ -8,12 +8,14 @@ gdt_code:
     db 0x00
     db 10011010b ; Segment present set 1, since segment is present in memory - used for virtual memory
     db 11001111b ;
+    db 0x00
 
 gdt_data:
     dd 0x0000ffff
     db 0x00
     db 10010010b
     db 11001111b
+    db 0x00
 
 gdt_end:
 
