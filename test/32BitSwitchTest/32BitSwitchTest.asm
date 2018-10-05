@@ -16,12 +16,12 @@
 
 [bits 32]
 begin_pm:
-    mov ebx, MSG_PROT_MODE
+    mov ecx, MSG_PROT_MODE
     call print_32_string
     jmp $
 
 MSG_REAL_MODE: db "Started in 16-bit Real mode...", 0x0a, 0x0d, 0
-MSG_PROT_MODE: db "Successfully landed in 32-bit Protected Mode", 0x0a, 0x0d, 0
+MSG_PROT_MODE: db "Successfully landed in 32-bit Protected Mode          "
 
 times 510 - ($ - $$) db 0
 dw 0xaa55

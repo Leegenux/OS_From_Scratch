@@ -1,5 +1,5 @@
 ; Given that the ecx was set to point to the source string
-
+; ecx contains the parameter
 [bits 32]
 
 VIDEO_MEMORY equ 0xb8000      ; The Video memory in 32-bit mode is located at 0xb8000
@@ -10,12 +10,14 @@ print_32_string:		          ; First you should set the VIDEO_MEMORY iteral
     push ebx                  ; Destination pointer (Video memory)
     push ecx                  ; Source string pointer
 
+    ; Init
+    mov ah, WHITE_ON_BLACK    ; Set the style of the print
+    mov ebx, VIDEO_MEMORY     ; Set the edx pointing to the video_memory
+
     print_32_loop:
 
-    mov ebx, VIDEO_MEMORY     ; Set the edx pointing to the video_memory
-    mov ah, WHITE_ON_BLACK    ; Set the style of the print
+    ; Check and print
     mov al, [ecx]
-    
     cmp al, 0
     je print_32_done
 
