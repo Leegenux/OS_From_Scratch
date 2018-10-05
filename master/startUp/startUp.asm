@@ -17,9 +17,12 @@ call switch_to_pm
 
 [bits 32]
 begin_pm:       ; This label is required by 32BitSwitch
-call 0x1000 ; Remember that if your KERNEL_SEGMENT is not 0x0000
-                   ; Then here is supposed to be some tuning.
-jmp $
+    mov ecx, PROTECT_MODE_MSG
+    call print_32_string
+
+    call 0x1000 ; Remember that if your KERNEL_SEGMENT is not 0x0000
+                    ; Then here is supposed to be some tuning.
+    jmp $
 
 %include "../16BitPrint/16BitPrint.asm"
 %include "../16BitLoadKernel/16BitLoadKernel.asm"
