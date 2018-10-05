@@ -15,10 +15,9 @@ mov sp, bp
 call load_kernel
 call switch_to_pm
 
-
 [bits 32]
 begin_pm:       ; This label is required by 32BitSwitch
-call [KERNEL_OFFSET] ; Remember that if your KERNEL_SEGMENT is not 0x0000
+call 0x1000 ; Remember that if your KERNEL_SEGMENT is not 0x0000
                    ; Then here is supposed to be some tuning.
 jmp $
 
@@ -26,10 +25,12 @@ jmp $
 %include "../16BitLoadKernel/16BitLoadKernel.asm"
 %include "../32Bit/32BitGDT.asm"
 %include "../32Bit/32BitSwitch.asm"
+%include "../32BitPrint/32BitPrint.asm"
 
 times 510 - ($ - $$) db 0x0
 dw 0xaa55
 
-times 0x1e00 db 0x00  ; 15 sectors
+; times 0x1e00 db 0x00  ; 15 sectors
+; To avoid read disk error, use -boot or -fda flags while exec qemu
 
 ; Remember this number qemu: Trying to execute code outside RAM or ROM at 0x00000000ff007d50
