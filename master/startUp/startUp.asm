@@ -1,7 +1,6 @@
 ; This file is the main driver of the startup process
 
 [org 0x7c00]    ; BIOS code offset
-BIOS_CODE_OFFSET equ 0x7c00
 
 mov [BOOT_DRIVE_NUMBER], dl
 
@@ -17,12 +16,12 @@ call switch_to_pm
 
 [bits 32]
 begin_pm:       ; This label is required by 32BitSwitch
-    mov ecx, PROTECT_MODE_MSG
+    mov ebx, PROTECT_MODE_MSG
     call print_32_string
 
-    call 0x1000 ; Remember that if your KERNEL_SEGMENT is not 0x0000
+    call [KERNEL_OFFSET] ; Remember that if your KERNEL_SEGMENT is not 0x0000
                     ; Then here is supposed to be some tuning.
-    jmp $
+jmp $
 
 %include "../16BitPrint/16BitPrint.asm"
 %include "../16BitLoadKernel/16BitLoadKernel.asm"
