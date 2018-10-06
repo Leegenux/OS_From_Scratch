@@ -1,5 +1,5 @@
 # OS_From_Scratch
-This repo is used for tracking my os development progress and by the way store the code.
+This repo is intended for tracking my OS development progress and by the way storing the code and recording changes.
 
 # Development Environment
 1. qemu
