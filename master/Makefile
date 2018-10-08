@@ -10,13 +10,13 @@ ASM = nasm
 
 CFLAGS = -g
 
-os_image.bin: startUp/startUp.bin kernel.bin
+os_image.bin: startUp/startUp.bin kernel/kernel.bin
 	cat $^ > os_image.bin
 
-kernel.bin: kernel/kernel_entry.o ${OBJ}
+kernel/kernel.bin: kernel/kernel_entry.o ${OBJ}
 	${LD} -o $@ -Ttext 0x1000 $^ --oformat binary
 
-kernel.elf: kernel/kernel_entry.o ${OBJ}
+kernel/kernel.elf: kernel/kernel_entry.o ${OBJ}
 	${LD} -o $@ -Ttext 0x1000 $^
 
 startUp/startUp.bin: startUp/startUp.asm
