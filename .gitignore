@@ -1,0 +1,7 @@
+/master/kernel/kernel.bin
+/master/kernel/os_image.bin
+/master/kernel/osImage.bin
+/master/kernel/startUp.bin
+/test/32BitSwitchTest/32BitSwitchTest.bin
+/test/defaultStackPointerValue/defaultStackPointerValue.bin
+/test/loadDiskTest/loadDiskTest.bin
