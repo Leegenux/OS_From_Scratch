@@ -5,7 +5,7 @@ OBJ = ${C_SOURCES:.c=.o}
 
 CC = /usr/local/i386elfgcc/bin/i386-elf-gcc
 LD = /usr/local/i386elfgcc/bin/i386-elf-ld
-GDB = /usr/local/i386elfgcc/bin/i386-elf-GDB
+GDB = /usr/local/i386elfgcc/bin/i386-elf-gdb
 ASM = nasm
 
 CFLAGS = -g
@@ -25,7 +25,7 @@ startUp/startUp.bin: startUp/startUp.asm
 run: os_image.bin
 	qemu-system-i386 -fda os_image.bin
 
-debug: os_image.bin
+debug: os_image.bin kernel/kernel.elf
 	qemu-system-i386 -s -fda os_image.bin &
 	${GDB} -ex "target remote localhost:1234" -ex "symbol-file kernel/kernel.elf"
 

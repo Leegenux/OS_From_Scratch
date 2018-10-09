@@ -1,7 +1,7 @@
 #include "../drivers/ports.h"
 
-void dummy_test_entrypoint() {
-}
+// void dummy_test_entrypoint() {
+// }
 
 void main(void) {
     // Get the video_memory
