@@ -1,7 +1,7 @@
 #include "../drivers/ports.h"
 
-// void dummy_test_entrypoint() {
-// }
+void dummy_test_entrypoint() {
+}
 
 void main(void) {
     // Get the video_memory
@@ -9,7 +9,7 @@ void main(void) {
 
     // Print the hello world string
     int i = 0;
-    const char *helloString = "Hello world!    ";
+    const char *helloString = "Hello world!                            ";
     for (; i<16; i++) {
         video_memory[2*i] = helloString[i];
         video_memory[2*i + 1] = 0x0f;

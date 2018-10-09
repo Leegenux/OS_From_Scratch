@@ -40,4 +40,4 @@ debug: os_image.bin kernel/kernel.elf
 
 clean:
 	rm -rf *.bin *.dis *.o os_image.bin *.elf
-	rm -rf kernel/*.o startUp/*.bin drivers/*.o boot/*.o
+	rm -rf kernel/*.o startUp/*.bin drivers/*.o kernel/*.bin kernel/*.elf
