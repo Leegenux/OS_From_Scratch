@@ -1,12 +1,11 @@
 #include "../drivers/ports.h"
 
-void dummy_test_entrypoint() {
-}
+// void dummy_test_entrypoint() {
+// }
 
 void main(void) {
     // Get the video_memory
     char *video_memory = (char *)0xb8000;
-
 
     // Get the position of the current cursor location
     short cursorQueryPort = 0x3d4;
