@@ -7,3 +7,11 @@
 /test/loadDiskTest/loadDiskTest.bin
 /test/compileTest/functionCalls.bin
 /test/test16BitPrint/test16BitPrint.bin
+/master/drivers/ports.o
+/master/kernel.bin
+/master/kernel.elf
+/master/kernel/kernel_entry.o
+/master/kernel/kernel.elf
+/master/kernel/kernel.o
+/master/os_image.bin
+/master/startUp/startUp.bin
