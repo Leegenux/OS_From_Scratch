@@ -5,3 +5,5 @@
 /test/32BitSwitchTest/32BitSwitchTest.bin
 /test/defaultStackPointerValue/defaultStackPointerValue.bin
 /test/loadDiskTest/loadDiskTest.bin
+/test/compileTest/functionCalls.bin
+/test/test16BitPrint/test16BitPrint.bin
