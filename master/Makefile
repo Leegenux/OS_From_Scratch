@@ -26,10 +26,8 @@ run: os_image.bin
 	qemu-system-i386 -fda os_image.bin
 
 debug: os_image.bin kernel/kernel.elf
-	cp kernel/kernel.bin ./
-	cp kernel/kernel.elf ./
-	qemu-system-i386 -s -fda os_image.bin &
-	${GDB} -ex "target remote localhost:1234" -ex "symbol-file kernel.elf"
+	qemu-system-i386 -S -s -fda os_image.bin &
+	${GDB} -ex "target remote localhost:1234" -ex "symbol-file kernel/kernel.elf"
 
 %.o: %.c ${HEADERS}
 	${CC}  ${CFLAGS} -ffreestanding -c $< -o $@
