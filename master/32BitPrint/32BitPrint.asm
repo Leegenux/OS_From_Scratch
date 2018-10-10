@@ -34,5 +34,8 @@ print_32_string:		      ; First you should set the VIDEO_MEMORY iteral
     pop ax
     ret
 
-PROTECT_MODE_MSG: db "Entered protect mode.     ", 0
+PROTECT_MODE_MSG: db "Entered protect mode."
+msg_end:
+times 80 - (msg_end - PROTECT_MODE_MSG) - 1 db ' '
+db 0
 
