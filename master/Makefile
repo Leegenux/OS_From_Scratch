@@ -1,3 +1,4 @@
+# Variable groups
 C_SOURCES = $(wildcard kernel/*.c drivers/*.c)
 HEADERS = $(wildcard kernel/*.h drivers/*.h)
 
@@ -10,6 +11,10 @@ ASM = nasm
 
 CFLAGS = -g
 
+
+# $^ --- deps(multiple)
+# $@ --- target
+# $< --- first dep
 os_image.bin: startUp/startUp.bin kernel/kernel.bin
 	cat $^ > os_image.bin
 
@@ -19,10 +24,10 @@ kernel/kernel.bin: kernel/kernel_entry.o ${OBJ}
 kernel/kernel.elf: kernel/kernel_entry.o ${OBJ}
 	${LD} -o $@ -Ttext 0x1000 $^
 
-startUp/startUp.bin: startUp/startUp.asm
+startUp/startUp.bin: startUp/startUp.asm  # Nasm needs working directory as current directory while handling %include links.
 	cd startUp && nasm -f bin -o startUp.bin startUp.asm
 
-run: os_image.bin
+run: os_image.bin  # Set starting from floppy disk with -fda
 	qemu-system-i386 -fda os_image.bin
 
 debug: os_image.bin kernel/kernel.elf    ## Here -S suspends the program from running and waits for the gdb, and -s specifies the default port for remote debuggin.
