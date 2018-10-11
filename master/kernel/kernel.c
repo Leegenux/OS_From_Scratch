@@ -21,8 +21,8 @@ void main(void) {
 
     // Print the hello world string at current cursor
     int i = 0;
-    const char *helloString = "Hello world!                            ";
-    for (; i < 25; i++) {
+    const char *helloString = "Message from kernel: Hello world!                            ";
+    for (; i < 60; i++) {
         video_memory[2*i + offset_from_vga] = helloString[i];
         video_memory[2*i + offset_from_vga + 1] = 0x0f;
     }
