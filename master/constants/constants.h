@@ -6,4 +6,7 @@ extern short kcursorResultPort;
 extern char kcursorOffsetLowerBitsFlag;
 extern char kcursorOffsetHigherBitsFlag;
 
+unsigned char kscreenGridCol;
+unsigned char kscreenGridRow;
+
 extern char kfontColorWhiteOnBlack; // color
