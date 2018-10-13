@@ -1,0 +1,1 @@
+int get_current_cursor_offset(void);

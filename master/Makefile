@@ -1,6 +1,6 @@
 # Variable groups
-C_SOURCES = $(wildcard kernel/*.c drivers/*.c)
-HEADERS = $(wildcard kernel/*.h drivers/*.h)
+C_SOURCES = $(wildcard kernel/*.c drivers/*.c constants/*.c)
+HEADERS = $(wildcard kernel/*.h drivers/*.h constants/*.c)
 
 OBJ = ${C_SOURCES:.c=.o}
 
@@ -47,4 +47,4 @@ debug: os_image.bin kernel/kernel.elf    ## Here -S suspends the program from ru
 
 clean:
 	rm -rf *.bin *.dis *.o os_image.bin *.elf
-	rm -rf kernel/*.o startUp/*.bin drivers/*.o kernel/*.bin kernel/*.elf
+	rm -rf kernel/*.o startUp/*.bin drivers/*.o kernel/*.bin kernel/*.elf constants/*.o
