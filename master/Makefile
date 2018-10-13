@@ -8,6 +8,8 @@ CC = /usr/local/i386elfgcc/bin/i386-elf-gcc
 LD = /usr/local/i386elfgcc/bin/i386-elf-ld
 GDB = /usr/local/i386elfgcc/bin/i386-elf-gdb
 ASM = nasm
+EMU = qemu-system-i386
+
 
 CFLAGS = -g
 
@@ -16,7 +18,7 @@ CFLAGS = -g
 # $@ --- target
 # $< --- first dep
 os_image.bin: startUp/startUp.bin kernel/kernel.bin
-	cat $^ > os_image.bin
+	cat $^ > $@
 
 kernel/kernel.bin: kernel/kernel_entry.o ${OBJ}
 	${LD} -o $@ -Ttext 0x1000 $^ --oformat binary
@@ -28,10 +30,10 @@ startUp/startUp.bin: startUp/startUp.asm  # Nasm needs working directory as curr
 	cd startUp && nasm -f bin -o startUp.bin startUp.asm
 
 run: os_image.bin  # Set starting from floppy disk with -fda
-	qemu-system-i386 -fda os_image.bin
+	${EMU} -fda $<
 
 debug: os_image.bin kernel/kernel.elf    ## Here -S suspends the program from running and waits for the gdb, and -s specifies the default port for remote debuggin.
-	qemu-system-i386 -S -s -fda os_image.bin &
+	${EMU} -S -s -fda os_image.bin &
 	${GDB} -ex "target remote localhost:1234" -ex "symbol-file kernel/kernel.elf" -ex "b main" -ex "c"
 
 %.o: %.c ${HEADERS}
