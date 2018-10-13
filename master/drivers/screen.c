@@ -1,7 +1,7 @@
 #include "screen.h"
 #include "ports.h"
 #include "../constants/constants.h"
-#include <assert.h>
+// #include <assert.h>
 
 /**
  * Following are getting offset functions
@@ -18,7 +18,7 @@ unsigned int get_current_cursor_offset(void) {
     port_byte_out(cursorQueryPort, kcursorOffsetLowerBitsFlag); // low byte
     position += port_byte_in(cursorResultPort);
     
-    assert(position <= kscreenGridCol * kscreenGridRow);
+    // assert(position <= kscreenGridCol * kscreenGridRow);
     unsigned int offset_from_vga = position * 2;
 
 
