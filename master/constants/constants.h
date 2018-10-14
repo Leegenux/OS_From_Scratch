@@ -1,12 +1,14 @@
 #define VIDEO_MEMORY (0xb8000)
 
 // cursor related
-extern short kcursorQueryPort;
-extern short kcursorResultPort;
-extern char kcursorOffsetLowerBitsFlag;
-extern char kcursorOffsetHigherBitsFlag;
+const extern short kcursorQueryPort;
+const extern short kcursorResultPort;
+const extern char kcursorOffsetLowerBitsFlag;
+const extern char kcursorOffsetHigherBitsFlag;
 
-unsigned char kscreenGridCol;
-unsigned char kscreenGridRow;
+const unsigned char kscreenGridCol;
+const unsigned char kscreenGridRow;
+const unsigned short kscreenTotal;
+const unsigned short kscreenTotalOffset;
 
-extern char kfontColorWhiteOnBlack; // color
+const extern char kfontColorWhiteOnBlack; // color

@@ -2,6 +2,8 @@
 #include "../drivers/screen.h"
 #include "../constants/constants.h"
 
+void exit(int errorCode);
+
 void main(void) {
     // Get the video_memory
     char *video_memory = (char *)(VIDEO_MEMORY);
@@ -15,4 +17,10 @@ void main(void) {
         video_memory[2*i + offset_from_vga] = helloString[i];
         video_memory[2*i + offset_from_vga + 1] = kfontColorWhiteOnBlack;
     }
+
+    return 0;
+}
+
+void exit(int errorCode) {
+    // TODO: Print the error information and exit;
 }
