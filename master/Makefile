@@ -4,9 +4,9 @@ HEADERS = $(wildcard kernel/*.h drivers/*.h constants/*.c)
 
 OBJ = ${C_SOURCES:.c=.o}
 
-CC = /usr/local/i386elf/bin/i386-elf-gcc
-# LD = /usr/local/i386elf/bin/i386-elf-ld
-GDB = /usr/local/i386elf/bin/i386-elf-gdb
+CC = i386-elf-gcc
+LD = i386-elf-ld
+GDB = i386-elf-gdb
 ASM = nasm
 EMU = qemu-system-i386
 
