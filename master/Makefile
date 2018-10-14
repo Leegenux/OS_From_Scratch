@@ -3,20 +3,22 @@ C_SOURCES = $(wildcard kernel/*.c drivers/*.c constants/*.c)
 HEADERS = $(wildcard kernel/*.h drivers/*.h constants/*.c)
 
 OBJ = ${C_SOURCES:.c=.o}
+# Tools, the i386 directory should have been added into the $PATH
 
-CC = /usr/local/i386elf/bin/i386-elf-gcc
-# LD = /usr/local/i386elf/bin/i386-elf-ld
-GDB = /usr/local/i386elf/bin/i386-elf-gdb
+CC = i386-elf-gcc
+LD = i386-elf-ld
+GDB = i386-elf-gdb
 ASM = nasm
 EMU = qemu-system-i386
 
-
+# Flags
 CFLAGS = -g
-
+CXXFLAGS = -g
 
 # $^ --- deps(multiple)
 # $@ --- target
 # $< --- first dep
+
 os_image.bin: startUp/startUp.bin kernel/kernel.bin
 	cat $^ > $@
 
