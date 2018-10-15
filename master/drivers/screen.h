@@ -18,5 +18,6 @@ void set_cursor_location(const cursorLocation *cursorLoc);
 // Print functions
 // void kprint();
 unsigned char kprint_at(const char *charStringToPrint, unsigned char colorStyle, const cursorLocation *cursorLoc, char toMoveCursor);
+unsigned char kprint(const char *charStringToPrint, unsigned char colorStyle);
 unsigned short print_char(unsigned char charToPrint, unsigned char colorStyle, unsigned short offset);
 void clear_screen(void);

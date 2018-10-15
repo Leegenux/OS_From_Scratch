@@ -3,6 +3,12 @@
 #include "../constants/constants.h"
 
 /**
+ *  You should always tell them apart(cursorLocation, position and offset) when maintaining the code
+ * 1. The port just returns the position and offset = position * 2
+ * 2. cursorLocation is the imaginary location of the 80 * 25 grid, based on the position
+ */
+
+/**
  * Following are getting offset functions, mind that the position is what we call the memory offset.
  * each of the index starts from 1.
  * Remember that each and every character is consistent of two bytes. Lower for the character and Higher for the color
@@ -50,17 +56,19 @@ cursorLocation create_cursor_location_with_row_and_col(unsigned char row, unsign
 }
 
 cursorLocation get_cursor_location_from_offset(unsigned short offset) {
+    // Error check
     if (offset > kscreenTotalOffset) {
         exit(1);
     }
-
+    // Return the cursorLoc
+    unsigned short position = offset / 2;
     cursorLocation cursorLoc;
-    cursorLoc.row = offset / kscreenGridCol;
-    cursorLoc.col = offset - cursorLoc.row * kscreenGridCol ;
+    cursorLoc.row = position / kscreenGridCol;
+    cursorLoc.col = position - cursorLoc.row * kscreenGridCol ;
     return cursorLoc;
 }
 
-cursorLocation get_current_cursor_location(void) {
+cursorLocation get_current_cursor_location(void) {     // TESTED
     /**
      * Note: the cursor_offset has already checked by the get_current_cursor_offset() function
      * so here we needn't that extra check.
@@ -72,14 +80,14 @@ cursorLocation get_current_cursor_location(void) {
 /**
  * Set cursorLocation with cursorLocation structure
  */
-void set_cursor_location(const cursorLocation *cursorLoc) {
-    unsigned short cursorOffset = get_cursor_offset_from_cursor_location(cursorLoc) / 2;
+void set_cursor_location(const cursorLocation *cursorLoc) { // TESTED
+    unsigned short cursorPosition = get_cursor_offset_from_cursor_location(cursorLoc) / 2;
     // Lower bits 
     port_byte_out(kcursorQueryPort, kcursorOffsetLowerBitsFlag);
-    port_byte_out(kcursorResultPort, cursorOffset & 0xff);
+    port_byte_out(kcursorResultPort, cursorPosition & 0xff);
     // Higher bits
     port_byte_out(kcursorQueryPort, kcursorOffsetHigherBitsFlag);
-    port_byte_out(kcursorResultPort, cursorOffset >> 8);
+    port_byte_out(kcursorResultPort, cursorPosition >> 8);
 
     return;
 }
@@ -87,14 +95,12 @@ void set_cursor_location(const cursorLocation *cursorLoc) {
 /**
  * Kernel print functions
  */
-unsigned char kprint_at(const char *charStringToPrint, unsigned char colorStyle, const cursorLocation *cursorLoc, char toMoveCursor) {
+unsigned char kprint_at(const char *charStringToPrint, unsigned char colorStyle, const cursorLocation *cursorLoc, char toMoveCursor) { // TESTED
     /**
      * 
      */
     // default colorStyle and other error handling
-    if (!colorStyle) {
-        colorStyle = kfontColorWhiteOnBlack;
-    }
+    colorStyle = colorStyle ? : kfontColorWhiteOnBlack;
     if (!charStringToPrint) {
         return FAILURE;
     }
@@ -114,32 +120,44 @@ unsigned char kprint_at(const char *charStringToPrint, unsigned char colorStyle,
 
     // Move the cursor
     if (toMoveCursor) {
-        cursorLocation tempLoc = get_cursor_location_from_offset(offset/2);
+        cursorLocation tempLoc = get_cursor_location_from_offset(offset); // Position = offset / 2, but here offset is required
         set_cursor_location(&tempLoc);
     }
 
     return SUCCESS;
 }
 
-unsigned short print_char(unsigned char charToPrint, unsigned char colorStyle, unsigned short offset) {
+unsigned char kprint(const char *charStringToPrint, unsigned char colorStyle) {
+    /**
+     * Print at the current location and by the way moves the cursor
+     */
+    cursorLocation currentCursorLoc = get_current_cursor_location();
+    return kprint_at(charStringToPrint, colorStyle, &currentCursorLoc, 1);
+}
+
+unsigned short print_char(unsigned char charToPrint, unsigned char colorStyle, unsigned short offset) { // TESTED
+    /**
+     * 
+     */
     // Write the character
     char *videoMemToWrite = (char *)VIDEO_MEMORY + offset;
-    videoMemToWrite[0] = charToPrint;
-    videoMemToWrite[1] = colorStyle;
-
-    // Handle the '\n' character
-    if (charToPrint == '\n') {
+    if (charToPrint != '\n') {
+        videoMemToWrite[0] = charToPrint;
+        videoMemToWrite[1] = colorStyle;
+        offset += 2;
+    } else {    // Handle the '\n' character
         cursorLocation tempLocation = get_cursor_location_from_offset(offset);
         tempLocation.col = 0;
         tempLocation.row++;
         offset = get_cursor_offset_from_cursor_location(&tempLocation);
-    } else {
-        offset += 2;
     }
     return offset;
 }
 
-void clear_screen(void) {
+void clear_screen(void) { // TESTED
+    /**
+     *
+     */
     // Set the chars
     char *currentLoc = (char *)VIDEO_MEMORY;
     while (currentLoc <= (char *)VIDEO_MEMORY_END) {
