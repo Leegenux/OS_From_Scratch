@@ -29,7 +29,7 @@ unsigned short get_current_cursor_offset(void) {
     return position * 2;
 }
 
-unsigned short get_cursor_offset_from_cursor_location(const cursorLocation * const cursorLoc) {
+unsigned short get_cursor_offset_from_cursor_location(const cursorLocation *cursorLoc) {
     /**
      * Note: The general priciple is that we shouldn't create the cursorLocation manually, and in this way we can assure that the 
      */
@@ -42,7 +42,7 @@ unsigned short get_cursor_offset_from_cursor_location(const cursorLocation * con
  * Following are getting cursorLocation functions
  * The cursorLocation is the abstract imaginary location of the cursor in the 80 x 25 grid.
  */
-cursorLocation get_cursor_location_from_offset(const unsigned short offset) {
+cursorLocation get_cursor_location_from_offset(unsigned short offset) {
     if (offset > kscreenTotalOffset) {
         exit(1);
     }
@@ -65,7 +65,7 @@ cursorLocation get_current_cursor_location(void) {
 /**
  * Set cursorLocation with cursorLocation structure
  */
-void set_cursor_location(const cursorLocation * const cursorLoc) {
+void set_cursor_location(const cursorLocation *cursorLoc) {
     unsigned short cursorOffset = get_cursor_offset_from_cursor_location(cursorLoc) / 2;
     // Lower bits 
     port_byte_out(kcursorQueryPort, kcursorOffsetLowerBitsFlag);
@@ -80,9 +80,57 @@ void set_cursor_location(const cursorLocation * const cursorLoc) {
 /**
  * Kernel print functions
  */
-void kprint_at();
-void kprint();
-void clear_screen();
+void kprint_at(const char *charStringToPrint, unsigned char colorStyle, const cursorLocation *cursorLoc, char toMoveCursor) {
+    // Get the offset
+    unsigned short offset;
+    if (cursorLoc == NULL) {
+        offset = get_current_cursor_offset();
+    } else {
+        offset = get_cursor_offset_from_cursor_location(cursorLoc);
+    }
+
+    // Start to print until occurence of 0x00, and by the way manage the offset
+    unsigned int index = 0;
+    while (charStringToPrint[index] != 0x00) {
+        offset = print_char(charStringToPrint[index++], colorStyle, offset);
+    }
+
+    return;
+}
+
+unsigned short print_char(unsigned char charToPrint, unsigned char colorStyle, unsigned short offset) {
+    // Write the character
+    char *videoMemToWrite = (char *)VIDEO_MEMORY + offset;
+    videoMemToWrite[0] = charToPrint;
+    videoMemToWrite[1] = colorStyle;
+
+    // Handle the '\n' character
+    if (charToPrint == '\n') {
+        cursorLocation tempLocation = get_cursor_location_from_offset(offset);
+        tempLocation.col = 0;
+        tempLocation.row++;
+        offset = get_cursor_offset_from_cursor_location(&tempLocation);
+    } else {
+        offset += 2;
+    }
+    return offset;
+}
+
+void clear_screen(void) {
+    // Set the chars
+    char *currentLoc = (char *)VIDEO_MEMORY;
+    while (currentLoc <= VIDEO_MEMORY_END) {
+        *(currentLoc++) = NULL;
+        *(currentLoc++) = kfontColorWhiteOnBlack;
+    }
+    // Set the current cursor
+    cursorLocation cursorZero;
+    cursorZero.col = 0;
+    cursorZero.row = 0;
+    set_cursor_location(&cursorZero);
+
+    return;
+}
 
 
 
