@@ -5,20 +5,22 @@
 void exit(int errorCode);
 
 void main(void) {
-    // Get the video_memory
-    char *video_memory = (char *)(VIDEO_MEMORY);
+    // Test clear screen
+    cursorLocation cursorLoc_1 = create_cursor_location_with_row_and_col(24, 79);
+    print_char('X', kfontColorWhiteOnBlack, get_cursor_offset_from_cursor_location(&cursorLoc_1));
 
-    int offset_from_vga = get_current_cursor_offset();
+    clear_screen();
 
-    // Print the hello world string at current cursor
-    int i = 0;
-    const char *helloString = "Message from kernel: Hello world!                                   ";
-    for (; i < 70; i++) {
-        video_memory[2*i + offset_from_vga] = helloString[i];
-        video_memory[2*i + offset_from_vga + 1] = kfontColorWhiteOnBlack;
-    }
+    // Test kprint_at without location
+    char *helloString = "Hello world! --- from Kernel";
+    kprint_at(helloString, kfontColorWhiteOnBlack, NULL, 1);
+    
+    // Test kprint_at with location
+    cursorLocation cursorLoc_2 = create_cursor_location_with_row_and_col(2, 0);
+    kprint_at(helloString, NULL, &cursorLoc_2, 0);
 
-    return 0;
+
+    return;
 }
 
 void exit(int errorCode) {

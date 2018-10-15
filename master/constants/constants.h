@@ -1,16 +1,22 @@
-#define VIDEO_MEMORY (0xb8000)
-#define NULL ((void *)0)
+// Generic
+extern const void *NULL;
 
 // cursor related
-const extern short kcursorQueryPort;
-const extern short kcursorResultPort;
-const extern char kcursorOffsetLowerBitsFlag;
-const extern char kcursorOffsetHigherBitsFlag;
+extern const short kcursorQueryPort;
+extern const short kcursorResultPort;
+extern const char kcursorOffsetLowerBitsFlag;
+extern const char kcursorOffsetHigherBitsFlag;
 
-const unsigned char kscreenGridCol;
-const unsigned char kscreenGridRow;
-const unsigned short kscreenTotal;
-const unsigned short kscreenTotalOffset;
-const unsigned int VIDEO_MEMORY_END;
+extern const unsigned char kscreenGridCol;
+extern const unsigned char kscreenGridRow;
+extern const unsigned short kscreenTotal;
+extern const unsigned short kscreenTotalOffset;
+extern const unsigned int VIDEO_MEMORY;
+extern const unsigned int VIDEO_MEMORY_END;
 
-const extern char kfontColorWhiteOnBlack; // color
+extern const char kfontColorWhiteOnBlack; // color
+
+// Status const
+typedef unsigned char typeStatus;
+extern const typeStatus SUCCESS;
+extern const typeStatus FAILURE;
