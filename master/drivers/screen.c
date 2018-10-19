@@ -1,6 +1,7 @@
 #include "screen.h"
 #include "ports.h"
 #include "../constants/constants.h"
+#include "../kernel/utils.h"
 
 /**
  *  You should always tell them apart(cursorLocation, position and offset) when maintaining the code
@@ -95,7 +96,7 @@ void set_cursor_location(const cursorLocation *cursorLoc) { // TESTED
 /**
  * Kernel print functions
  */
-unsigned char kprint_at(const char *charStringToPrint, unsigned char colorStyle, const cursorLocation *cursorLoc, char toMoveCursor) { // TESTED
+unsigned char kprint_at(const char *charStringToPrint, unsigned char colorStyle, const cursorLocation *cursorLoc, char toMoveCursor) { 
     /**
      * 
      */
@@ -120,8 +121,14 @@ unsigned char kprint_at(const char *charStringToPrint, unsigned char colorStyle,
 
     // Move the cursor
     if (toMoveCursor) {
+        // Move the cursor and possibly scrolls the screen
         cursorLocation tempLoc = get_cursor_location_from_offset(offset); // Position = offset / 2, but here offset is required
         set_cursor_location(&tempLoc);
+
+        // Scrolls the screen : TODO avoid the potential lag, I should improve the screen driver with buff technique    
+        // TODO
+        // TODO
+
     }
 
     return SUCCESS;
@@ -135,23 +142,42 @@ unsigned char kprint(const char *charStringToPrint, unsigned char colorStyle) {
     return kprint_at(charStringToPrint, colorStyle, &currentCursorLoc, 1);
 }
 
-unsigned short print_char(unsigned char charToPrint, unsigned char colorStyle, unsigned short offset) { // TESTED
+unsigned short print_char(unsigned char charToPrint, unsigned char colorStyle, unsigned short offset) { 
     /**
      * 
      */
-    // Write the character
+    // Write the character into the Video Memory
     char *videoMemToWrite = (char *)VIDEO_MEMORY + offset;
-    if (charToPrint != '\n') {
+    cursorLocation nextLocation = get_cursor_location_from_offset(offset);      // Default is to Plus 2
+
+    if (charToPrint != '\n') {  // Handle writing to VGA
         videoMemToWrite[0] = charToPrint;
         videoMemToWrite[1] = colorStyle;
-        offset += 2;
     } else {    // Handle the '\n' character
-        cursorLocation tempLocation = get_cursor_location_from_offset(offset);
-        tempLocation.col = 0;
-        tempLocation.row++;
-        offset = get_cursor_offset_from_cursor_location(&tempLocation);
+        nextLocation.row += (nextLocation.col != 0);        // If nextLocation.col == 0, then Plus 2 has already switched the row
+        nextLocation.col = 0;
     }
-    return offset;
+    
+    if (nextLocation.row >= kscreenGridRow) {
+        scroll_down();
+        nextLocation.row--;
+    }
+
+    return get_cursor_offset_from_cursor_location(&nextLocation);
+}
+
+void scroll_down() {
+    // Set the cursorLocation
+    cursorLocation currentLoc = get_current_cursor_location();
+    currentLoc.row -= (currentLoc.row != 0);   // If the cursor goes beyond the top, then don't move up.
+
+    set_cursor_location(&currentLoc);
+    // Copies the characters
+    unsigned char index;
+    char *videoMem = (char *)VIDEO_MEMORY;
+    for (index = 1; index < kscreenGridRow; index++) {
+        memory_copy(videoMem + 2 * index * kscreenGridCol, videoMem + 2 * (index-1) * kscreenGridCol, 2 * sizeof(char) * kscreenGridCol);
+    }
 }
 
 void clear_screen(void) { // TESTED
@@ -172,7 +198,5 @@ void clear_screen(void) { // TESTED
 
     return;
 }
-
-
 
 

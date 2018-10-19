@@ -1,3 +1,7 @@
+
+/**
+ * A easy memcpy implementaion
+ */
 void memory_copy(char *source, char *dest, int nBytes) {
     int index;
     for (index = 0; index < nBytes; index++) {
@@ -5,9 +9,6 @@ void memory_copy(char *source, char *dest, int nBytes) {
     }
 }
 
-/**
- * 
- */
 void int_to_ascii(int sourceNumber, char dest[]) {
     /**
      *  This function convert the int into a inverse string
@@ -16,7 +17,7 @@ void int_to_ascii(int sourceNumber, char dest[]) {
      */
     int index, sign;
 
-    // Turn minus into positive 
+    // Turn minus into positive and stores the sign
     if ((sign = sourceNumber) < 0) index = -index;
 
     index = 0;
