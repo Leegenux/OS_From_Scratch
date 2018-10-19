@@ -6,7 +6,7 @@
 /**
  *  You should always tell them apart(cursorLocation, position and offset) when maintaining the code
  * 1. The port just returns the position and offset = position * 2
- * 2. cursorLocation is the imaginary location of the 80 * 25 grid, based on the position
+ * 2. cursorLocation is the imaginary location of the 80 * 25 grid, based on the position, starting from 0 and 0
  */
 
 /**
@@ -14,7 +14,7 @@
  * each of the index starts from 1.
  * Remember that each and every character is consistent of two bytes. Lower for the character and Higher for the color
  */
-unsigned short get_current_cursor_offset(void) {
+unsigned short get_current_cursor_offset(void) { // TESTED
     /**
      * This function gets current cursor offset from the port 
      * Operations interacting with ports needs parameter check
@@ -36,7 +36,7 @@ unsigned short get_current_cursor_offset(void) {
     return position * 2;
 }
 
-unsigned short get_cursor_offset_from_cursor_location(const cursorLocation *cursorLoc) {
+unsigned short get_cursor_offset_from_cursor_location(const cursorLocation *cursorLoc) { // TESTED
     /**
      * Note: The general priciple is that we shouldn't create the cursorLocation manually, and in this way we can assure that the 
      */
@@ -49,20 +49,20 @@ unsigned short get_cursor_offset_from_cursor_location(const cursorLocation *curs
  * Following are getting cursorLocation functions
  * The cursorLocation is the abstract imaginary location of the cursor in the 80 x 25 grid.
  */
-cursorLocation create_cursor_location_with_row_and_col(unsigned char row, unsigned char col) {
+cursorLocation create_cursor_location_with_row_and_col(unsigned char row, unsigned char col) {// TESTED
     cursorLocation cursorLoc;
     cursorLoc.row = row;
     cursorLoc.col = col;
     return cursorLoc;
 }
 
-cursorLocation get_cursor_location_from_offset(unsigned short offset) {
+cursorLocation get_cursor_location_from_offset(unsigned short offset) {// TESTED
     // Error check
     if (offset > kscreenTotalOffset) {
         exit(1);
     }
     // Return the cursorLoc
-    unsigned short position = offset / 2;
+    unsigned short position = offset >> 1;
     cursorLocation cursorLoc;
     cursorLoc.row = position / kscreenGridCol;
     cursorLoc.col = position - cursorLoc.row * kscreenGridCol ;
@@ -82,21 +82,19 @@ cursorLocation get_current_cursor_location(void) {     // TESTED
  * Set cursorLocation with cursorLocation structure
  */
 void set_cursor_location(const cursorLocation *cursorLoc) { // TESTED
-    unsigned short cursorPosition = get_cursor_offset_from_cursor_location(cursorLoc) / 2;
+    unsigned short cursorPosition = get_cursor_offset_from_cursor_location(cursorLoc) >> 1;
     // Lower bits 
     port_byte_out(kcursorQueryPort, kcursorOffsetLowerBitsFlag);
     port_byte_out(kcursorResultPort, cursorPosition & 0xff);
     // Higher bits
     port_byte_out(kcursorQueryPort, kcursorOffsetHigherBitsFlag);
     port_byte_out(kcursorResultPort, cursorPosition >> 8);
-
-    return;
 }
 
 /**
  * Kernel print functions
  */
-unsigned char kprint_at(const char *charStringToPrint, unsigned char colorStyle, const cursorLocation *cursorLoc, char toMoveCursor) { 
+unsigned char kprint_at(const char *charStringToPrint, unsigned char colorStyle, const cursorLocation *cursorLoc, char toMoveCursor) {//TESTED
     /**
      * 
      */
@@ -124,17 +122,12 @@ unsigned char kprint_at(const char *charStringToPrint, unsigned char colorStyle,
         // Move the cursor and possibly scrolls the screen
         cursorLocation tempLoc = get_cursor_location_from_offset(offset); // Position = offset / 2, but here offset is required
         set_cursor_location(&tempLoc);
-
-        // Scrolls the screen : TODO avoid the potential lag, I should improve the screen driver with buff technique    
-        // TODO
-        // TODO
-
     }
 
     return SUCCESS;
 }
 
-unsigned char kprint(const char *charStringToPrint, unsigned char colorStyle) {
+unsigned char kprint(const char *charStringToPrint, unsigned char colorStyle) {//TESTED
     /**
      * Print at the current location and by the way moves the cursor
      */
@@ -142,13 +135,13 @@ unsigned char kprint(const char *charStringToPrint, unsigned char colorStyle) {
     return kprint_at(charStringToPrint, colorStyle, &currentCursorLoc, 1);
 }
 
-unsigned short print_char(unsigned char charToPrint, unsigned char colorStyle, unsigned short offset) { 
+unsigned short print_char(unsigned char charToPrint, unsigned char colorStyle, unsigned short offset) {//TESTED
     /**
-     * 
+     * It won't automatically sets the current cursor location only when scroll is needed (moves cursor up)
      */
     // Write the character into the Video Memory
     char *videoMemToWrite = (char *)VIDEO_MEMORY + offset;
-    cursorLocation nextLocation = get_cursor_location_from_offset(offset);      // Default is to Plus 2
+    cursorLocation nextLocation = get_cursor_location_from_offset(offset + 2);      // Default is to Plus 2
 
     if (charToPrint != '\n') {  // Handle writing to VGA
         videoMemToWrite[0] = charToPrint;
@@ -158,6 +151,7 @@ unsigned short print_char(unsigned char charToPrint, unsigned char colorStyle, u
         nextLocation.col = 0;
     }
     
+    // Scrolls if beyond bound
     if (nextLocation.row >= kscreenGridRow) {
         scroll_down();
         nextLocation.row--;
@@ -166,7 +160,7 @@ unsigned short print_char(unsigned char charToPrint, unsigned char colorStyle, u
     return get_cursor_offset_from_cursor_location(&nextLocation);
 }
 
-void scroll_down() {
+void scroll_down(void) {//TESTED
     // Set the cursorLocation
     cursorLocation currentLoc = get_current_cursor_location();
     currentLoc.row -= (currentLoc.row != 0);   // If the cursor goes beyond the top, then don't move up.
@@ -176,7 +170,15 @@ void scroll_down() {
     unsigned char index;
     char *videoMem = (char *)VIDEO_MEMORY;
     for (index = 1; index < kscreenGridRow; index++) {
-        memory_copy(videoMem + 2 * index * kscreenGridCol, videoMem + 2 * (index-1) * kscreenGridCol, 2 * sizeof(char) * kscreenGridCol);
+        memory_copy(videoMem + 2 * index * kscreenGridCol,
+                    videoMem + 2 * (index-1) * kscreenGridCol,
+                    2 * sizeof(char) * kscreenGridCol);
+    }
+    // Sets last line empty 
+    char *lastLineIterator = (char *)VIDEO_MEMORY + (kscreenGridRow - 1) * kscreenGridCol * 2;
+    for (; lastLineIterator < (char *)VIDEO_MEMORY_END; lastLineIterator += 2) { 
+        lastLineIterator[0] = ' ';
+        lastLineIterator[1] = kfontColorWhiteOnBlack;
     }
 }
 
@@ -187,7 +189,7 @@ void clear_screen(void) { // TESTED
     // Set the chars
     char *currentLoc = (char *)VIDEO_MEMORY;
     while (currentLoc <= (char *)VIDEO_MEMORY_END) {
-        *(currentLoc++) = NULL;
+        *(currentLoc++) = (char)0x00;
         *(currentLoc++) = kfontColorWhiteOnBlack;
     }
     // Set the current cursor
@@ -195,8 +197,6 @@ void clear_screen(void) { // TESTED
     cursorZero.col = 0;
     cursorZero.row = 0;
     set_cursor_location(&cursorZero);
-
-    return;
 }
 
 

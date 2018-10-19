@@ -2,6 +2,7 @@ typedef struct cursorlocation {
     unsigned char row;
     unsigned char col;
 } cursorLocation;
+cursorLocation create_cursor_location_with_row_and_col(unsigned char row, unsigned char col); // 
 
 // Get cursor memory offset
 unsigned short get_current_cursor_offset(void);
@@ -21,3 +22,6 @@ unsigned char kprint_at(const char *charStringToPrint, unsigned char colorStyle,
 unsigned char kprint(const char *charStringToPrint, unsigned char colorStyle);
 unsigned short print_char(unsigned char charToPrint, unsigned char colorStyle, unsigned short offset);
 void clear_screen(void);
+
+// 
+void scroll_down(void);
