@@ -1,5 +1,5 @@
 # Variable groups
-C_SOURCES = $(wildcard kernel/*.c drivers/*.c constants/*.c)
+C_SOURCES = $(wildcard kernel/*.c drivers/*.c constants/*.c)   # Needs modification if any new C source folder is created 
 HEADERS = $(wildcard kernel/*.h drivers/*.h constants/*.c)
 
 OBJ = ${C_SOURCES:.c=.o}
