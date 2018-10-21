@@ -1,6 +1,6 @@
 # Variable groups
-C_SOURCES = $(wildcard kernel/*.c drivers/*.c constants/*.c)   # Needs modification if any new C source folder is created 
-HEADERS = $(wildcard kernel/*.h drivers/*.h constants/*.c)
+C_SOURCES = $(wildcard kernel/*.c drivers/*.c constants/*.c cpu/*.c)   # Needs modification if any new C source folder is created 
+HEADERS = $(wildcard kernel/*.h drivers/*.h constants/*.h cpu/*.h)
 
 OBJ = ${C_SOURCES:.c=.o}
 # Tools, the i386 directory should have been added into the $PATH
