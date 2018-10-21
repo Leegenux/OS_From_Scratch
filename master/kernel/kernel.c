@@ -1,6 +1,7 @@
 #include "../drivers/ports.h"
 #include "../drivers/screen.h"
 #include "../constants/constants.h"
+#include "utils.h"
 
 void exit(int errorCode);
 
@@ -15,6 +16,11 @@ void main(void) {
         }
         kprint("\n", NULL);
     }
+
+    cursorLocation curLoc = get_current_cursor_location();
+    char stor[5];
+    int_to_ascii(CODE_SEG, stor);
+    kprint(stor, NULL);
     
     return;
 }

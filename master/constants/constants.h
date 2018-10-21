@@ -1,6 +1,16 @@
 // Generic
 extern const void *NULL;
 
+// OS-specific
+/**
+ * Instruction: How to reference the constants in assembly code ?
+ * 1. Make the constant public using assembly directive : global
+ * 2. Import the constant using C extern.
+ * 3. Link together
+ */
+extern char CODE_SEG;
+extern char DATA_SEG;
+
 // cursor related
 extern const short kcursorQueryPort;
 extern const short kcursorResultPort;

@@ -10,11 +10,11 @@ switch_to_pm:   ; Protected mode
     mov cr0, eax
 
     ; Current stage: the segmentation approach is changed. CODE_SEG is just a offset to the GDT_START
-    jmp CODE_SEG:init_pm    ; 4. Far jump by using a different segment to flush the pipeline (The jump is workable since the code segment actually does not change, which is 0x0000 before and after.)
+    jmp CODE_S:init_pm    ; 4. Far jump by using a different segment to flush the pipeline (The jump is workable since the code segment actually does not change, which is 0x0000 before and after.)
 
 [bits 32]
 init_pm:       
-    mov ax, DATA_SEG       ; 5. Update the segment registers since the inner mechanism of segment has already changed
+    mov ax, DATA_S       ; 5. Update the segment registers since the inner mechanism of segment has already changed
     mov ds, ax
     mov ss, ax
     mov es, ax
