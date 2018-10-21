@@ -6,7 +6,7 @@ cursorLocation create_cursor_location_with_row_and_col(unsigned char row, unsign
 
 // Get cursor memory offset
 unsigned short get_current_cursor_offset(void);
-unsigned short get_cursor_offset_from_cursor_location(const cursorLocation *cursorLoc);
+unsigned short get_offset_from_cursor_location(const cursorLocation *cursorLoc);
 
 // Get cursorLocation
 cursorLocation create_cursor_location_with_row_and_col(unsigned char row, unsigned char col);

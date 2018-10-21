@@ -2,7 +2,7 @@
 C_SOURCES = $(wildcard kernel/*.c drivers/*.c constants/*.c cpu/*.c)   # Needs modification if any new C source folder is created 
 HEADERS = $(wildcard kernel/*.h drivers/*.h constants/*.h cpu/*.h)
 
-OBJ = ${C_SOURCES:.c=.o}
+OBJ = ${C_SOURCES:.c=.o 32Bit/32BitGDT.o}
 # Tools, the i386 directory should have been added into the $PATH
 
 CC = i386-elf-gcc
