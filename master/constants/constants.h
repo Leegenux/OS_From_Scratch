@@ -8,7 +8,7 @@ extern const void *NULL;
  * 2. Import the constant using C extern.
  * 3. Link together
  */
-extern char CODE_SEG;
+extern char CODE_SEG;       // Following 2 are originally implemented in assembly
 extern char DATA_SEG;
 
 // cursor related

@@ -36,7 +36,7 @@ unsigned short get_current_cursor_offset(void) { // TESTED
     return position * 2;
 }
 
-unsigned short get_cursor_offset_from_cursor_location(const cursorLocation *cursorLoc) { // TESTED
+unsigned short get_offset_from_cursor_location(const cursorLocation *cursorLoc) { // TESTED
     /**
      * Note: The general priciple is that we shouldn't create the cursorLocation manually, and in this way we can assure that the 
      */
@@ -82,7 +82,7 @@ cursorLocation get_current_cursor_location(void) {     // TESTED
  * Set cursorLocation with cursorLocation structure
  */
 void set_cursor_location(const cursorLocation *cursorLoc) { // TESTED
-    unsigned short cursorPosition = get_cursor_offset_from_cursor_location(cursorLoc) >> 1;
+    unsigned short cursorPosition = get_offset_from_cursor_location(cursorLoc) >> 1;
     // Lower bits 
     port_byte_out(kcursorQueryPort, kcursorOffsetLowerBitsFlag);
     port_byte_out(kcursorResultPort, cursorPosition & 0xff);
@@ -108,7 +108,7 @@ unsigned char kprint_at(const char *charStringToPrint, unsigned char colorStyle,
     if (cursorLoc == NULL) {
         offset = get_current_cursor_offset();
     } else {
-        offset = get_cursor_offset_from_cursor_location(cursorLoc);
+        offset = get_offset_from_cursor_location(cursorLoc);
     }
 
     // Start to print until occurence of 0x00, and by the way manage the offset
@@ -157,7 +157,7 @@ unsigned short print_char(unsigned char charToPrint, unsigned char colorStyle, u
         nextLocation.row--;
     }
 
-    return get_cursor_offset_from_cursor_location(&nextLocation);
+    return get_offset_from_cursor_location(&nextLocation);
 }
 
 void scroll_down(void) {//TESTED
