@@ -49,4 +49,5 @@ debug: os_image.bin kernel/kernel.elf    ## Here -S suspends the program from ru
 
 clean:
 	rm -rf *.bin *.dis *.o os_image.bin *.elf
-	rm -rf kernel/*.o startUp/*.bin drivers/*.o kernel/*.bin kernel/*.elf constants/*.o
+	rm -rf kernel/*.o startUp/*.bin drivers/*.o kernel/*.bin kernel/*.elf constants/*.o 32Bit/*.o
+	find ./ -name "*.o" -exec rm {}
