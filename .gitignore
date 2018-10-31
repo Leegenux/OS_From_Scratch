@@ -17,4 +17,4 @@
 # /master/startUp/startUp.bin
 *.o
 *.bin
-*.elf
+*.elf.vscode/
