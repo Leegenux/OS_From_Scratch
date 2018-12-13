@@ -1,4 +1,3 @@
-
 /**
  * A easy memcpy implementaion
  */
